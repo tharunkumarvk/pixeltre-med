@@ -17,9 +17,15 @@ export default function RecordList() {
   const [records, setRecords] = useState([]);
   const [error, setError] = useState("");
   const [msg, setMsg] = useState("");
+  const [csrfToken, setCsrfToken] = useState("");  // Added
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Fetch CSRF token
+    axios.get(`${API_URL}/csrf/`, { withCredentials: true })
+      .then(res => setCsrfToken(res.data.csrfToken))
+      .catch(err => console.error("Failed to fetch CSRF token"));
+    // Fetch records
     axios.get(`${API_URL}/records/`, { withCredentials: true })
       .then(res => setRecords(res.data))
       .catch(err => setError("Failed to fetch records"));
@@ -27,7 +33,10 @@ export default function RecordList() {
 
   const handleDelete = async id => {
     try {
-      await axios.post(`${API_URL}/records/${id}/delete/`, {}, { withCredentials: true });
+      await axios.post(`${API_URL}/records/${id}/delete/`, {}, {
+        headers: { "X-CSRFToken": csrfToken },  // Added
+        withCredentials: true
+      });
       setRecords(records.filter(r => r.id !== id));
       setMsg("Record deleted");
     } catch {
@@ -38,7 +47,10 @@ export default function RecordList() {
   const handleShare = async id => {
     try {
       const userId = prompt("Enter user ID to share with");
-      await axios.post(`${API_URL}/records/${id}/share/`, { user_id: userId }, { withCredentials: true });
+      await axios.post(`${API_URL}/records/${id}/share/`, { user_id: userId }, {
+        headers: { "X-CSRFToken": csrfToken },  // Added
+        withCredentials: true
+      });
       setMsg(`Shared with user ${userId}`);
     } catch {
       setError("Failed to share record");
@@ -47,7 +59,10 @@ export default function RecordList() {
 
   const handleGenerateLink = async id => {
     try {
-      const res = await axios.post(`${API_URL}/records/${id}/generate-link/`, {}, { withCredentials: true });
+      const res = await axios.post(`${API_URL}/records/${id}/generate-link/`, {}, {
+        headers: { "X-CSRFToken": csrfToken },  // Added
+        withCredentials: true
+      });
       setMsg(`Shareable link: ${res.data.link}`);
     } catch {
       setError("Failed to generate link");

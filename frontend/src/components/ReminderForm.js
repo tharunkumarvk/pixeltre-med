@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";  // Added useEffect
 import {
   Box, Button, Fade, Paper, TextField, Typography, LinearProgress
 } from "@mui/material";
@@ -12,7 +12,14 @@ export default function ReminderForm() {
   const [form, setForm] = useState({ title: "", date: "" });
   const [error, setError] = useState("");
   const [progress, setProgress] = useState(false);
+  const [csrfToken, setCsrfToken] = useState("");  // Added
   const navigate = useNavigate();
+
+  useEffect(() => {  // Added
+    axios.get(`${API_URL}/csrf/`, { withCredentials: true })
+      .then(res => setCsrfToken(res.data.csrfToken))
+      .catch(err => console.error("Failed to fetch CSRF token"));
+  }, []);
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -20,7 +27,10 @@ export default function ReminderForm() {
     e.preventDefault();
     try {
       setProgress(true);
-      await axios.post(`${API_URL}/reminders/`, form, { withCredentials: true });
+      await axios.post(`${API_URL}/reminders/`, form, {
+        headers: { "X-CSRFToken": csrfToken },  // Added
+        withCredentials: true
+      });
       setProgress(false);
       navigate("/");
     } catch {

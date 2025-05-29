@@ -1,0 +1,1 @@
+web: gunicorn pixeltre-med-main.wsgi

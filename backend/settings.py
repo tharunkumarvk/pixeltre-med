@@ -1,12 +1,12 @@
 from pathlib import Path
-
+import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'd0o)-#a!1r0cua4-h!si11qo%6#t=w*d!t^=k(7c312t3s@8n+'
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -116,3 +116,4 @@ EMAIL_HOST_PASSWORD = 'gvzp ptbf hdnk uvtn'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
