@@ -180,13 +180,7 @@ streamlit-image-coordinates==0.1.9
 streamlit-keyup==0.2.4
 streamlit-toggle-switch==1.0.2
 streamlit-vertical-slider==2.5.5
-tenacity==9.0.0
-tensorboard==2.19.0
-tensorboard-data-server==0.7.2
-tensorflow==2.19.0
-tensorflow_intel==2.18.0
-termcolor==2.5.0
-threadpoolctl==3.5.0
+
 toml==0.10.2
 tornado==6.4.1
 tqdm==4.67.0
@@ -197,8 +191,3 @@ uritemplate==4.1.1
 urllib3==2.2.3
 validators==0.34.0
 virtualenv==20.31.2
-watchdog==5.0.3
-wcwidth==0.2.13
-Werkzeug==3.0.4
-wheel==0.45.0
-wrapt==1.16.0
