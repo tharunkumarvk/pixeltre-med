@@ -1,0 +1,11 @@
+body {
+  background: linear-gradient(135deg, #121212 0%, #23272f 100%);
+  min-height: 100vh;
+}
+a {
+  color: #00bcd4;
+  text-decoration: none;
+  font-weight: 500;
+}
+::-webkit-scrollbar { width: 7px; background: #23272f; }
+::-webkit-scrollbar-thumb { background: #00bcd4; border-radius: 7px; }
