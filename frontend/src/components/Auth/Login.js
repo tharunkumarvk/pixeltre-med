@@ -14,14 +14,15 @@ export default function Login() {
 
   const handleSubmit = async e => {
     e.preventDefault();
+    setError("");
     try {
       const res = await axios.post("api/login/", form);
       localStorage.setItem("user", JSON.stringify(res.data.user));
       navigate("/");
-    } catch {
-      setError("Login failed");
-    }
-  };
+  } catch (err) {
+    setError(err.response?.data?.error || "Login failed");
+  }
+};
 
   return (
     <Fade in>

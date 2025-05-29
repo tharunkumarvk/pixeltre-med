@@ -17,7 +17,6 @@ export default function Dashboard() {
     { label: "My Records", path: "/records" },
     { label: "Upload Record", path: "/upload" },
     { label: "Set Reminder", path: "/reminder" },
-    ...(user.user_type === "doctor" ? [{ label: "My Patients", path: "/patients" }] : []),
   ];
 
   return (

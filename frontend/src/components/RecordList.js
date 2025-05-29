@@ -7,39 +7,51 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ShareIcon from "@mui/icons-material/Share";
 import LinkIcon from "@mui/icons-material/Link";
 import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
-import axios from "../api/axios";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000/api";
 
 export default function RecordList() {
   const [records, setRecords] = useState([]);
-  const [msg, setMsg] = useState("");
   const [error, setError] = useState("");
+  const [msg, setMsg] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get("api/records/").then(res => setRecords(res.data)).catch(() => setError("Failed to load records"));
+    axios.get(`${API_URL}/records/`, { withCredentials: true })
+      .then(res => setRecords(res.data))
+      .catch(err => setError("Failed to fetch records"));
   }, []);
 
   const handleDelete = async id => {
-    if (window.confirm("Are you sure?")) {
-      await axios.post(`api/records/${id}/delete/`);
-      setRecords(rs => rs.filter(r => r.id !== id));
-      setMsg("Deleted!");
+    try {
+      await axios.post(`${API_URL}/records/${id}/delete/`, {}, { withCredentials: true });
+      setRecords(records.filter(r => r.id !== id));
+      setMsg("Record deleted");
+    } catch {
+      setError("Failed to delete record");
     }
   };
 
   const handleShare = async id => {
-    const userId = prompt("Enter User ID to share with:");
-    if (userId) {
-      await axios.post(`api/records/${id}/share/`, { user_id: userId });
-      setMsg("Shared with user " + userId);
+    try {
+      const userId = prompt("Enter user ID to share with");
+      await axios.post(`${API_URL}/records/${id}/share/`, { user_id: userId }, { withCredentials: true });
+      setMsg(`Shared with user ${userId}`);
+    } catch {
+      setError("Failed to share record");
     }
   };
 
   const handleGenerateLink = async id => {
-    const res = await axios.post(`api/records/${id}/generate-link/`);
-    setMsg(`Shareable link: ${res.data.link}`);
+    try {
+      const res = await axios.post(`${API_URL}/records/${id}/generate-link/`, {}, { withCredentials: true });
+      setMsg(`Shareable link: ${res.data.link}`);
+    } catch {
+      setError("Failed to generate link");
+    }
   };
 
   return (
@@ -47,7 +59,7 @@ export default function RecordList() {
       <Box display="flex" alignItems="center" justifyContent="center" minHeight="100vh">
         <Paper elevation={8} sx={{
           px: 4, py: 6, minWidth: 460, maxWidth: 600, borderRadius: 4,
-          background: "linear-gradient(135deg,#23272f,#23272f 80%,#00bcd4 150%)"
+          background: "linear-gradient(135deg, #23272f, #23272f 80%, #00bcd4 150%)"
         }}>
           <Typography variant="h4" fontWeight={700} color="primary.main" align="center" gutterBottom>
             My Medical Records
@@ -74,7 +86,7 @@ export default function RecordList() {
               >
                 <ListItem
                   sx={{
-                    background: "linear-gradient(120deg,#23272f 80%,#00bcd4 160%)",
+                    background: "linear-gradient(120deg, #23272f 80%, #00bcd4 160%)",
                     mb: 2, borderRadius: 3
                   }}
                   secondaryAction={
@@ -98,13 +110,13 @@ export default function RecordList() {
                   }
                 >
                   <ListItemAvatar>
-                    <Avatar sx={{ bgcolor: "primary.main" }}>
+                    <Avatar>
                       <MedicalServicesIcon />
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText
                     primary={rec.description || "No Description"}
-                    secondary={`Doctor: ${rec.doctor} | Uploaded: ${new Date(rec.upload_date).toLocaleString()}`}
+                    secondary={`Uploaded: ${new Date(rec.upload_date).toLocaleString()}`}
                   />
                 </ListItem>
               </motion.div>

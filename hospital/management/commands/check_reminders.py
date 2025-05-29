@@ -14,8 +14,8 @@ class Command(BaseCommand):
                 continue
             send_mail(
                 subject=f'Reminder: {reminder.title}',
-                message=f'Your reminder "{reminder.title}" is due.',
-                from_email='tharunkumarvk28@gmail.com',  # Replace
+                message=f'Your reminder: {reminder.title}',
+                from_email='tharunkumarvk28@gmail.com',
                 recipient_list=[reminder.user.email],
                 fail_silently=True,
             )

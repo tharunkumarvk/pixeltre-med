@@ -59,13 +59,13 @@ export default function Register() {
             </Typography>
             <form style={{ width: "100%" }} onSubmit={handleSubmit}>
               <TextField name="username" label="Username" fullWidth variant="outlined"
-                         margin="normal" onChange={handleChange} required />
+                margin="normal" onChange={handleChange} required />
               <TextField name="email" type="email" label="Email" fullWidth variant="outlined"
-                         margin="normal" onChange={handleChange} required />
+                margin="normal" onChange={handleChange} required />
               <TextField name="password" type="password" label="Password" fullWidth
-                         variant="outlined" margin="normal" onChange={handleChange} required />
+                variant="outlined" margin="normal" onChange={handleChange} required />
               <TextField name="phone_number" label="Phone number" fullWidth variant="outlined"
-                         margin="normal" onChange={handleChange} required />
+                margin="normal" onChange={handleChange} required />
               <TextField
                 select name="user_type" label="User Type"
                 value={form.user_type} onChange={handleChange} fullWidth margin="normal"

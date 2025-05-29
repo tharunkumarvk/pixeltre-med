@@ -9,7 +9,6 @@ import Dashboard from "./components/Dashboard";
 import UploadRecord from "./components/UploadRecord";
 import RecordList from "./components/RecordList";
 import ReminderForm from "./components/ReminderForm";
-import DoctorPatients from "./components/DoctorPatients";
 import "./App.css";
 
 const PageTransition = ({ children }) => (
@@ -36,7 +35,6 @@ function AnimatedRoutes() {
         <Route path="/upload" element={isAuthenticated ? <PageTransition><UploadRecord /></PageTransition> : <Navigate to="/login" />} />
         <Route path="/records" element={isAuthenticated ? <PageTransition><RecordList /></PageTransition> : <Navigate to="/login" />} />
         <Route path="/reminder" element={isAuthenticated ? <PageTransition><ReminderForm /></PageTransition> : <Navigate to="/login" />} />
-        <Route path="/patients" element={isAuthenticated ? <PageTransition><DoctorPatients /></PageTransition> : <Navigate to="/login" />} />
       </Routes>
     </AnimatePresence>
   );
