@@ -1,36 +1,60 @@
-import React, { useState, useEffect } from "react";  // Added useEffect
+import React, { useState, useEffect } from "react";
 import {
-  Box, Button, Fade, Paper, TextField, Typography, LinearProgress
+  Box, Button, Fade, Paper, TextField, Typography, LinearProgress, MenuItem
 } from "@mui/material";
-import axios from "axios";
+import axios from "../api/axios";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000/api";
-
 export default function ReminderForm() {
-  const [form, setForm] = useState({ title: "", date: "" });
+  const [form, setForm] = useState({ title: "", date: "", doctor: "", patient: "" });
   const [error, setError] = useState("");
   const [progress, setProgress] = useState(false);
-  const [csrfToken, setCsrfToken] = useState("");  // Added
+  const [patients, setPatients] = useState([]);
+  const [doctors, setDoctors] = useState([]);
   const navigate = useNavigate();
+  const user = (() => {
+    try {
+      return JSON.parse(localStorage.getItem("user") || "{}");
+    } catch {
+      return {};
+    }
+  })();
 
-  useEffect(() => {  // Added
-    axios.get(`${API_URL}/csrf/`, { withCredentials: true })
-      .then(res => setCsrfToken(res.data.csrfToken))
-      .catch(err => console.error("Failed to fetch CSRF token"));
-  }, []);
+  useEffect(() => {
+    if (user.user_type === "doctor") {
+      navigate("/records"); // or show a message
+    }
+  }, [user.user_type, navigate]);
+
+  useEffect(() => {
+    if (user.user_type === "doctor") {
+      // Fetch assigned patients
+      axios.get("api/patients/").then(res => {
+        setPatients(res.data);
+      }).catch(() => setPatients([]));
+    } else if (user.user_type === "patient") {
+      // Fetch assigned doctors
+      axios.get("api/doctors/").then(res => {
+        setDoctors(res.data);
+      }).catch(() => setDoctors([]));
+    }
+  }, [user.user_type]);
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async e => {
     e.preventDefault();
+    setError("");
     try {
       setProgress(true);
-      await axios.post(`${API_URL}/reminders/`, form, {
-        headers: { "X-CSRFToken": csrfToken },  // Added
-        withCredentials: true
-      });
+      let payload = { title: form.title, date: form.date };
+      if (user.user_type === "doctor") {
+        payload.patient = form.patient || null;
+      } else if (user.user_type === "patient") {
+        payload.doctor = form.doctor || null;
+      }
+      await axios.post("api/reminders/", payload);
       setProgress(false);
       navigate("/");
     } catch {
@@ -38,6 +62,8 @@ export default function ReminderForm() {
       setError("Failed to create reminder");
     }
   };
+
+  if (user.user_type === "doctor") return null;
 
   return (
     <Fade in>
@@ -70,6 +96,40 @@ export default function ReminderForm() {
               required
               InputLabelProps={{ shrink: true }}
             />
+            {user && user.user_type === "doctor" && (
+              <TextField
+                select
+                name="patient"
+                label="Select Patient"
+                fullWidth
+                variant="outlined"
+                margin="normal"
+                value={form.patient}
+                onChange={handleChange}
+                required
+              >
+                {patients.map(p => (
+                  <MenuItem key={p.id} value={p.id}>{p.username} ({p.email})</MenuItem>
+                ))}
+              </TextField>
+            )}
+            {user && user.user_type === "patient" && (
+              <TextField
+                select
+                name="doctor"
+                label="Select Doctor"
+                fullWidth
+                variant="outlined"
+                margin="normal"
+                value={form.doctor}
+                onChange={handleChange}
+                required
+              >
+                {doctors.map(d => (
+                  <MenuItem key={d.id} value={d.id}>{d.username} ({d.email})</MenuItem>
+                ))}
+              </TextField>
+            )}
             {error && <Typography color="error">{error}</Typography>}
             {progress && <LinearProgress />}
             <motion.div whileHover={{ scale: 1.05 }}>

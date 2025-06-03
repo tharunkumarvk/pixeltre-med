@@ -16,13 +16,17 @@ export default function Login() {
     e.preventDefault();
     setError("");
     try {
-      const res = await axios.post("api/login/", form);
+      const res = await axios.post("/api/login/", form);
+      localStorage.setItem("access_token", res.data.access);
+      localStorage.setItem("refresh_token", res.data.refresh);
       localStorage.setItem("user", JSON.stringify(res.data.user));
+      console.log("[Login.js] user:", res.data.user);
       navigate("/");
-  } catch (err) {
-    setError(err.response?.data?.error || "Login failed");
-  }
-};
+      window.location.reload(); // Force re-render so App.js picks up new localStorage
+    } catch (err) {
+      setError(err?.response?.data?.error || "Login failed");
+    }
+  };
 
   return (
     <Fade in>
@@ -43,9 +47,9 @@ export default function Login() {
             </Typography>
             <form style={{ width: "100%" }} onSubmit={handleSubmit}>
               <TextField name="username" label="Username" fullWidth variant="outlined"
-                         margin="normal" onChange={handleChange} required />
+                margin="normal" onChange={handleChange} required />
               <TextField name="password" type="password" label="Password" fullWidth
-                         variant="outlined" margin="normal" onChange={handleChange} required />
+                variant="outlined" margin="normal" onChange={handleChange} required />
               {error && <Typography color="error">{error}</Typography>}
               <motion.div whileHover={{ scale: 1.05 }}>
                 <Button

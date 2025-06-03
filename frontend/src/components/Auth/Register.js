@@ -9,20 +9,16 @@ import { motion } from "framer-motion";
 
 export default function Register() {
   const [form, setForm] = useState({
-    username: "",
-    email: "",
-    password: "",
-    user_type: "patient",
-    phone_number: "",
-    package: ""
+    username: "", email: "", password: "", user_type: "patient", phone_number: "", package: ""
   });
   const [error, setError] = useState("");
   const [packages, setPackages] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (form.user_type === "doctor") {
-      axios.get("api/packages/").then(res => setPackages(res.data));
+    axios.get("api/packages/").then(res => setPackages(res.data));
+    if (form.user_type !== "patient") {
+      setForm(f => ({ ...f, package: "" }));
     }
   }, [form.user_type]);
 
@@ -30,13 +26,22 @@ export default function Register() {
 
   const handleSubmit = async e => {
     e.preventDefault();
+    setError("");
     try {
       const data = { ...form };
-      if (data.user_type === "patient") delete data.package;
+      if (data.user_type === "patient") {
+        if (!data.package) {
+          setError("Please select a package.");
+          return;
+        }
+        data.package = Number(data.package);
+      } else {
+        delete data.package;
+      }
       await axios.post("api/register/", data);
       navigate("/login");
-    } catch {
-      setError("Register failed");
+    } catch (err) {
+      setError(err.response?.data?.error || "Registration failed");
     }
   };
 
@@ -73,9 +78,9 @@ export default function Register() {
                 <MenuItem value="patient">Patient</MenuItem>
                 <MenuItem value="doctor">Doctor</MenuItem>
               </TextField>
-              {form.user_type === "doctor" && (
+              {form.user_type === "patient" && (
                 <TextField
-                  select name="package" label="Doctor Package"
+                  select name="package" label="Patient Package"
                   value={form.package} onChange={handleChange} fullWidth margin="normal" required
                 >
                   <MenuItem value="">Select Package</MenuItem>

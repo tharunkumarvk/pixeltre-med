@@ -1,1 +1,1 @@
-web: gunicorn pixeltre-med-main.wsgi
+web: gunicorn backend.wsgi

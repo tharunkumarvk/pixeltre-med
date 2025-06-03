@@ -1,0 +1,139 @@
+Creating test database for alias 'default'...
+Unauthorized: /api/reminders/
+FUnauthorized: /api/records/1/delete/
+FUnauthorized: /api/records/2/generate-link/
+FUnauthorized: /api/records/
+FEUnauthorized: /api/logout/
+FUnauthorized: /api/profile/
+FFBad Request: /api/register/
+FUnauthorized: /api/records/4/share/
+FUnauthorized: /api/records/upload/
+FNot Found: /api/share//
+FE
+======================================================================
+ERROR: test_login (hospital.tests.HospitalAPITests.test_login)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\pls_pixel\pixeltre-med\hospital\tests.py", line 87, in test_login
+    self.assertEqual(response.data["message"], "Welcome, john")
+                     ~~~~~~~~~~~~~^^^^^^^^^^^
+KeyError: 'message'
+
+======================================================================
+ERROR: test_check_reminders (hospital.tests.ReminderCommandTests.test_check_reminders)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\pls_pixel\pixeltre-med\hospital\tests.py", line 222, in setUp
+    self.reminder = Reminder.objects.create(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\pls_pixel\venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\pls_pixel\venv\Lib\site-packages\django\db\models\query.py", line 661, in create
+    obj = self.model(**kwargs)
+          ^^^^^^^^^^^^^^^^^^^^
+  File "D:\pls_pixel\venv\Lib\site-packages\django\db\models\base.py", line 569, in __init__
+    raise TypeError(
+TypeError: Reminder() got unexpected keyword arguments: 'user'
+
+======================================================================
+FAIL: test_create_reminder (hospital.tests.HospitalAPITests.test_create_reminder)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\pls_pixel\pixeltre-med\hospital\tests.py", line 197, in test_create_reminder
+    self.assertEqual(response.status_code, 201)
+AssertionError: 401 != 201
+
+======================================================================
+FAIL: test_delete_record (hospital.tests.HospitalAPITests.test_delete_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\pls_pixel\pixeltre-med\hospital\tests.py", line 144, in test_delete_record
+    self.assertEqual(response.status_code, 200)
+AssertionError: 401 != 200
+
+======================================================================
+FAIL: test_generate_share_link (hospital.tests.HospitalAPITests.test_generate_share_link)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\pls_pixel\pixeltre-med\hospital\tests.py", line 171, in test_generate_share_link
+    self.assertEqual(response.status_code, 201)
+AssertionError: 401 != 201
+
+======================================================================
+FAIL: test_list_records (hospital.tests.HospitalAPITests.test_list_records)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\pls_pixel\pixeltre-med\hospital\tests.py", line 158, in test_list_records
+    self.assertEqual(response.status_code, 200)
+AssertionError: 401 != 200
+
+======================================================================
+FAIL: test_logout (hospital.tests.HospitalAPITests.test_logout)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\pls_pixel\pixeltre-med\hospital\tests.py", line 102, in test_logout
+    self.assertEqual(response.status_code, 200)
+AssertionError: 401 != 200
+
+======================================================================
+FAIL: test_profile (hospital.tests.HospitalAPITests.test_profile)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\pls_pixel\pixeltre-med\hospital\tests.py", line 94, in test_profile
+    self.assertEqual(response.status_code, 200)
+AssertionError: 401 != 200
+
+======================================================================
+FAIL: test_register_doctor (hospital.tests.HospitalAPITests.test_register_doctor)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\pls_pixel\pixeltre-med\hospital\tests.py", line 78, in test_register_doctor
+    self.assertEqual(response.data, {"message": "User created"})
+AssertionError: {'access': 'eyJhbGciOiJIUzI1NiIsInR5cCI6Ikp[497 chars]: 17} != {'message': 'User created'}
++ {'message': 'User created'}
+- {'access': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ4OTI0MzI1LCJpYXQiOjE3NDg5MjQwMjUsImp0aSI6ImEzM2IwMDUzZmU0NjRlNzE5YTkzMmQ0NTliM2MzZjMyIiwidXNlcl9pZCI6MTd9.AXMWhL23ys9eJ6LM2pxNeWKsg-fP47OoG8wrGCPmiSA',
+-  'id': 17,
+-  'refresh': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc0OTAxMDQyNSwiaWF0IjoxNzQ4OTI0MDI1LCJqdGkiOiJiMDg4MTZkOWQ2YmQ0YmNhOTcwNzMyMWIwZjYzNjQyYSIsInVzZXJfaWQiOjE3fQ.UFIWzhF-Z4Tn5fzQtJShLVX0des38g_XPvgDEEm98gk',
+-  'user_type': 'doctor',
+-  'username': 'dralice'}
+
+======================================================================
+FAIL: test_register_patient (hospital.tests.HospitalAPITests.test_register_patient)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\pls_pixel\pixeltre-med\hospital\tests.py", line 64, in test_register_patient
+    self.assertEqual(response.status_code, 201)
+AssertionError: 400 != 201
+
+======================================================================
+FAIL: test_share_record (hospital.tests.HospitalAPITests.test_share_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\pls_pixel\pixeltre-med\hospital\tests.py", line 131, in test_share_record
+    self.assertEqual(response.status_code, 200)
+AssertionError: 401 != 200
+
+======================================================================
+FAIL: test_upload_record (hospital.tests.HospitalAPITests.test_upload_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\pls_pixel\pixeltre-med\hospital\tests.py", line 115, in test_upload_record
+    self.assertEqual(response.status_code, 201)
+AssertionError: 401 != 201
+
+======================================================================
+FAIL: test_view_shared_record (hospital.tests.HospitalAPITests.test_view_shared_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\pls_pixel\pixeltre-med\hospital\tests.py", line 187, in test_view_shared_record
+    self.assertEqual(response.status_code, 200)
+AssertionError: 404 != 200
+
+----------------------------------------------------------------------
+Ran 13 tests in 35.440s
+
+FAILED (failures=11, errors=2)
+Destroying test database for alias 'default'...
+Found 13 test(s).
+System check identified no issues (0 silenced).
