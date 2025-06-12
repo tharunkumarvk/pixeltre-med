@@ -1,0 +1,78 @@
+body {
+  background: linear-gradient(135deg, #f7fafd 0%, #e3f2fd 100%);
+  min-height: 100vh;
+  color: #222;
+}
+
+a {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: #43a047;
+  text-decoration: underline;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  background: #e3f2fd;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #b3e5fc;
+  border-radius: 6px;
+}
+
+/* Paper and card backgrounds */
+.MuiPaper-root,
+.MuiCard-root {
+  background: #fff !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 12px 0 rgba(60, 72, 88, 0.08) !important;
+}
+
+/* Button tweaks for light theme */
+.MuiButton-root {
+  background: #1976d2;
+  color: #fff;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.MuiButton-root:hover {
+  background: #43a047;
+  color: #fff;
+}
+
+/* AppBar gradient for light theme */
+.MuiAppBar-root {
+  background: linear-gradient(90deg, #1976d2 60%, #43a047 100%) !important;
+}
+
+/* Inputs and forms */
+.MuiInputBase-root,
+.MuiOutlinedInput-root {
+  background: #f7fafd;
+  border-radius: 8px;
+}
+
+.MuiInputLabel-root {
+  color: #1976d2;
+}
+
+/* Snackbar and alerts */
+.MuiSnackbarContent-root {
+  background: #43a047;
+  color: #fff;
+  border-radius: 8px;
+}
+
+/* Misc */
+hr {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 24px 0;
+}
