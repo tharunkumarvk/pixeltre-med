@@ -23,7 +23,7 @@ export default function UploadRecord() {
   useEffect(() => {
     if (user.user_type === "doctor") {
       // Doctor: show all patients for upload
-      axios.get("api/patients/all/", { headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` } })
+      axios.get("api/patients/all/")
         .then(res => setPatients(res.data))
         .catch(() => setPatients([]));
     } else if (user.user_type === "patient") {

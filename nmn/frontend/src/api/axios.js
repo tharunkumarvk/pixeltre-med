@@ -6,34 +6,20 @@ const instance = axios.create({
     "Content-Type": "application/json",
   },
   withCredentials: true,
-  xsrfCookieName: 'csrftoken',
-  xsrfHeaderName: 'X-CSRFToken'
 });
 
-// Get CSRF token from cookie
-function getCSRFToken() {
-  const name = 'csrftoken';
-  let cookieValue = null;
-  if (document.cookie && document.cookie !== '') {
-    const cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].trim();
-      if (cookie.substring(0, name.length + 1) === (name + '=')) {
-        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-        break;
-      }
-    }
-  }
-  return cookieValue;
+// Get JWT token from localStorage
+function getJWTToken() {
+  return localStorage.getItem('access_token');
 }
 
 // Add request interceptor
 instance.interceptors.request.use(
   (config) => {
-    // Add CSRF token to all requests
-    const csrfToken = getCSRFToken();
-    if (csrfToken) {
-      config.headers['X-CSRFToken'] = csrfToken;
+    // Add JWT token to all requests
+    const token = getJWTToken();
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
     }
     return config;
   },
@@ -44,21 +30,34 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response?.status === 403) {
-      // If we get a 403, try to refresh the CSRF token
+    const originalRequest = error.config;
+
+    // If error is 401 and we haven't tried to refresh token yet
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
       try {
-        await axios.get('http://localhost:8000/api/csrf/', { withCredentials: true });
-        // Retry the original request
-        const config = error.config;
-        const csrfToken = getCSRFToken();
-        if (csrfToken) {
-          config.headers['X-CSRFToken'] = csrfToken;
-        }
-        return instance(config);
+        // Try to refresh the token
+        const refreshToken = localStorage.getItem('refresh_token');
+        const response = await axios.post('http://localhost:8000/api/token/refresh/', {
+          refresh: refreshToken
+        });
+
+        // Update tokens
+        localStorage.setItem('access_token', response.data.access);
+
+        // Retry the original request with new token
+        originalRequest.headers['Authorization'] = `Bearer ${response.data.access}`;
+        return instance(originalRequest);
       } catch (refreshError) {
+        // If refresh fails, redirect to login
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        window.location.href = '/login';
         return Promise.reject(refreshError);
       }
     }
+
     return Promise.reject(error);
   }
 );
