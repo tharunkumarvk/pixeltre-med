@@ -14,6 +14,7 @@ import Profile from "./components/Profile";
 import AdminPackagePortal from "./components/AdminPackagePortal";
 import AdminDashboard from "./components/AdminDashboard";
 import UserManagement from "./components/UserManagement";
+import Header from "./components/Header";
 import "./App.css";
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router>
+        <Header />
         <div role="main">
           <Routes>
             <Route path="/" element={isAuthenticated ? (isAdmin ? <AdminDashboard /> : <Dashboard />) : <Navigate to="/login" />} />

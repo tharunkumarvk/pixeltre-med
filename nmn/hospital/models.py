@@ -36,6 +36,11 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
+    def save(self, *args, **kwargs):
+        if self.pk is None or not self.password.startswith('pbkdf2_'):
+            self.set_password(self.password)
+        super().save(*args, **kwargs)
+
 def validate_file_size(value):
     filesize = value.size
     if filesize > 10 * 1024 * 1024:  # 10MB

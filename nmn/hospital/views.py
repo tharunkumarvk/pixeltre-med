@@ -129,6 +129,9 @@ def login_user(request):
         user_type = getattr(user, 'user_type', None)
         if not user_type and (user.is_staff or user.is_superuser):
             user_type = 'admin'
+        used_storage_mb = sum([rec.prescription.size for rec in Record.objects.filter(patient=user, is_deleted=False)]) / (1024 * 1024) if user.package else 0
+        max_storage_mb = user.package.max_storage_mb if user.package else 0
+        available_storage_mb = max(0, max_storage_mb - used_storage_mb)
         return Response({
             'access': str(refresh.access_token),
             'refresh': str(refresh),
@@ -138,6 +141,9 @@ def login_user(request):
                 'id': user.id,
                 'is_staff': user.is_staff,
                 'is_superuser': user.is_superuser,
+                'max_storage_mb': max_storage_mb,
+                'used_storage_mb': used_storage_mb,
+                'available_storage_mb': available_storage_mb,
             }
         }, status=200)
     return Response({'error': 'Invalid credentials'}, status=401)
@@ -271,6 +277,9 @@ def delete_record(request, record_id):
         # Allow patient to delete if they are the owner
         if request.user.user_type == 'patient' and record.patient != request.user:
             return Response({'error': 'Only the owner patient can delete'}, status=403)
+        # Check if deleting is allowed for the user's package
+        if request.user.user_type == 'patient' and request.user.package and not request.user.package.can_delete:
+            return Response({'error': 'Deleting is not allowed for your package.'}, status=403)
         record.is_deleted = True
         record.save()
         return Response({'message': 'Record deleted'}, status=200)

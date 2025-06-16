@@ -21,6 +21,11 @@ class UserAdmin(admin.ModelAdmin):
         User._meta.get_field('user_type'): {'widget': forms.Select()},
     }
 
+    def save_model(self, request, obj, form, change):
+        if 'password' in form.cleaned_data:
+            obj.set_password(form.cleaned_data['password'])
+        super().save_model(request, obj, form, change)
+
 admin.site.register(User, UserAdmin)
 admin.site.register(Package)
 admin.site.register(Record)
