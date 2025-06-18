@@ -1,0 +1,90 @@
+body {
+  background: linear-gradient(135deg, #f7fafd 0%, #e3f2fd 100%);
+  min-height: 100vh;
+  color: #222;
+  font-family: "Poppins", "Roboto", sans-serif;
+  perspective: 1000px;
+}
+
+a {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s, transform 0.3s;
+}
+
+a:hover {
+  color: #43a047;
+  text-decoration: underline;
+  transform: scale(1.1);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  background: #e3f2fd;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #b3e5fc;
+  border-radius: 6px;
+}
+
+.MuiPaper-root,
+.MuiCard-root {
+  background: #fff !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 16px rgba(60, 72, 88, 0.15) !important;
+  transition: transform 0.3s ease-in-out;
+}
+
+.MuiPaper-root:hover,
+.MuiCard-root:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(60, 72, 88, 0.2);
+}
+
+.MuiButton-root {
+  background: #1976d2;
+  color: #fff;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.MuiButton-root:hover {
+  background: #43a047;
+  color: #fff;
+  transform: scale(1.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.MuiAppBar-root {
+  background: linear-gradient(90deg, #1976d2 60%, #43a047 100%) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.MuiInputBase-root,
+.MuiOutlinedInput-root {
+  background: #f7fafd;
+  border-radius: 12px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.MuiInputLabel-root {
+  color: #1976d2;
+  font-weight: 600;
+}
+
+.MuiSnackbarContent-root {
+  background: #43a047;
+  color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 24px 0;
+}
