@@ -1,8 +1,0 @@
-Django>=4.2,<6
-djangorestframework
-django-cors-headers
-gunicorn
-python-decouple
-python-dotenv
-mysqlclient
-djangorestframework-simplejwt
